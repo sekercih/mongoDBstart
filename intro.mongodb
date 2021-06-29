@@ -1,0 +1,50 @@
+
+//=================================================================
+//                     TEMEL KOMUTLAR
+//=================================================================
+//-----------------------------------------------------------------
+// 1) Varolan veritabanlarini listelemek icin.
+// //-----------------------------------------------------------------
+show dbs;
+//-----------------------------------------------------------------
+// 2) Veritabani tanimlamak veya icine girmek icin 
+//-----------------------------------------------------------------
+use("kisiler");
+//-----------------------------------------------------------------
+// 3) Icinde bulundugumuz (aktif) Veritabanini gormek icin
+// //----------------------------------------------------------------
+// db;
+//-----------------------------------------------------------------
+// 4) Aktif olan veritabanini silmek icin  
+//-----------------------------------------------------------------
+// db.dropDatabase();
+//-----------------------------------------------------------------
+// 5) Aktif olan veritabaninda bir collection olusturmak icin
+// //-----------------------------------------------------------------
+ db.createCollection("ogrenciler");
+//-----------------------------------------------------------------
+// 6) Bir collection'ı silmek icin 
+//-----------------------------------------------------------------
+db.ogrenciler.drop();
+
+db;
+
+db.ogrenciler.insertOne({"ad": "Murat", "soyad": "Cakir", "yas": 41});
+
+db.ogrenciler.find();
+
+db.ogrenciler.insertMany([
+ {"ad": "Ali", "soyad": "Can", "yas": 41},
+ {"ad": "Murat", "soyad": "Demir", "yas": 25},{"ad": "Veli", "soyad": "Tel", "yas": 16}]);
+//-----------------------------------------------------------------
+// 10) Bir degiskeni (tarih) eklemek icin 
+//-----------------------------------------------------------------
+// var tarih = new Date();
+// db.ogrenciler.insertOne({"suanki_tarih": tarih});
+// db.ogrenciler.find();
+var tarih1 = new ISODate();
+var ay = tarih1.getMonth();
+db.ogrenciler.insertOne({"ad":"can", "soyad":"gelir", "yas": 20, "dogumAyi": ay})
+db.ogrenciler.find();
+
+ 
