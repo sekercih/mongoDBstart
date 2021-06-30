@@ -1,0 +1,6 @@
+use("kisiler");
+
+//db.createCollection("ogrenciler");
+db.ogrenciler.insertOne({"ad":"hakan","not":88});
+
+show dbs;

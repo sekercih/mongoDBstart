@@ -1,0 +1,7 @@
+use ("topluluk");
+
+db.createCollection("ogrenciler");
+
+//db.ogrenciler.drop();
+
+db.ogrenciler.insertOne({"ad":"Ali","sayad":"seme","yas":55});

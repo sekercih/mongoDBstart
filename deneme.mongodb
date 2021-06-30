@@ -1,0 +1,3 @@
+use("kalemlik");
+//db.createCollection("kalemler");
+db.kalemler("kalemadi":"mavi","")
