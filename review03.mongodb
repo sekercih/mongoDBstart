@@ -1,0 +1,11 @@
+use("kalabalik");
+ //db.createCollection("ogrenci");
+
+//db.ogrenci.insertOne({"ad":"Ali","soyad":"lale","yas":25});
+
+db.ogrenci.find();
+
+//db.ogrenci.insertMany([{"ad":"Kale","soyad":"lale","yas":25},{"ad":"Can","soyad":"lale","yas":65},{"ad":"Mert","soyad":"lale","yas":35}]);
+
+
+db.ogrenci.find();

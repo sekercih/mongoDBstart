@@ -1,0 +1,5 @@
+use ("topluluk");
+
+//db.createCollection("ogrenciler");
+
+db.ogrenciler.insertMany("ad":"Ali","soyad":"Kale","yas":15);
