@@ -140,3 +140,94 @@ db.ogrenciler.aggregate([
    }
  }}
 ]);
+
+////---------------------------------------------------------------------------------
+//// 9) inglizce dersini alanlarin subelere gore sayilari hesaplayan sorguyu yaziniz.
+////---------------------------------------------------------------------------------
+db.ogrenciler.aggregate([
+  {$match:{dersler:"inglizce"}},
+  {$group:{_id:"$sube",ingAlanlarınSayisi:{$sum:1}}}
+]);
+
+
+
+db.ogrenciler.aggregate([
+  {$match:{dersler:["fizik","mat"]}},
+  {$group:{_id:["$sube","$isim"],fizikveMat:{$sum:1}}}
+]);
+
+
+db.ogrenciler.aggregate([
+  {$match:{sube:"A"}},
+  {
+  $sort: {
+    yas:-1,not:1
+  }}
+]);
+
+////---------------------------------------------------------------------------------
+//// 12) kisiler veritabanı altında hesaplar ismiyle yeni bir collection olusturunuz
+//       ve degerleri girginiz.
+////---------------------------------------------------------------------------------
+
+use("kisiler")
+// db.hesaplar.insertMany(
+// [{"isim" : "ali", "harcamalar":[-80, -40, -50, -120], "kazanc":[100, 150]},
+// {"isim" : "Can", "harcamalar" : [-60, -30, -20], "kazanc" : [200, 50, 130] },
+// {"isim" : "Canan", "harcamalar" : [-80, -40, -50], "kazanc" : [300, 450] },
+// {"isim" : "Betul", "harcamalar" : [-80, -120], "kazanc" : [500, 50, 70, 10] },
+// {"isim" : "Ahsen", "harcamalar" : [-140, -50, -120], "kazanc" : [400] },
+// {"isim" : "Su", "harcamalar" : [-120], "kazanc" : [22, 375, 65] },
+// {"isim" : "Pelin", "harcamalar" : [-180, -40, -70, -12], "kazanc" : [500, 650, 400]}]); 
+ 
+ ////---------------------------------------------------------------------------------
+//// 13) var olan dokumanlarda her kisi icin toplam harcama, toplam kazanc ve  
+////     bakiye degerlerini hesaplayarak dokumana ekleyen sorguyu yaziniz.
+////     bakiye'ye gore siralayiniz.
+////     NOT: Sorguda olmayan bir fiedl icin $addfield metodu kullanilabilir.
+////---------------------------------------------------------------------------------
+pipeline1 = [
+   {$addFields :{toplamHarcama: {$sum: "$harcamalar"}, toplamKazanc: {$sum: "$kazanc"}}} ,
+   {$addFields:{bakiye:{$add:["$toplamHarcama" ,"$toplamKazanc"]}}},
+   {$sort:{bakiye:-1}},
+   /**
+    * specifications: The fields to
+    *   include or exclude.
+    */
+   {$project: 
+     {"harcamalar":0,"kazanc":0,"_id":0}}
+   
+ ]
+ db.hesaplar.aggregate(pipeline1);
+
+ ////---------------------------------------------------------------------------------
+//// 14) hesaplar collection’nin muhasabe adinda bir kopyasini olusturalim.
+////----------------------------------------------
+
+
+//db.hesaplar.aggregate({$project:{_id:0}},{$merge:{into:"muhasebe"}});
+
+///---------------------------------------------------------------------------------
+//// 15) hesaplar collection’nindan harcamalar kismini cikararark kazanclar adinda
+////     yeni bir kopyasini olusturalim.
+////---------------------------------------------------------------------------------
+
+//db.hesaplar.aggregate({$project:{harcamalar:0,_id:0}},{$merge:{into:"kazanclar"}});
+
+////==================================================================================
+////                                  BULKWRITE
+////  Birden fazla islemi ayni koutla gerceklestirmek icin BulkWrite kullanilabilir.
+////==================================================================================
+// use("kisiler");
+// db.hikayeler.insertMany(
+// [{"yazar" : "Mehmet Bak", "fiyat" : 60, "yayinYili" : 1998 },
+// {"yazar" : "Ali Gel", "fiyat" : 75, "yayinYili" : 2000 },
+// {"yazar" : "Su Ak", "fiyat" : 90, "yayinYili" : 2005 },
+// {"yazar" : "İsmet Kaç", "fiyat" : 35, "yayinYili" : 2010 },
+// {"yazar" : "Pelin Su", "fiyat" : 80, "yayinYili" : 2020 },
+// {"yazar" : "Suat Ok", "fiyat" : 54, "yayinYili" : 2001}]);
+
+db.hikayeler.bulkWrite([{insertOne:{"document":{"yazar" : "Suat Ok", "fiyat" : 54, "yayinYili" : 2001}}},
+{updateOne:{"filter":{yazar:"Ali Gel"},"update":{$set:{fiyat:99}}}},
+{replaceOne:{"filter":{yazar:"Pelin Su"},"replacement":{"yazar":"Ceylan Kara","fiyat":55}}},
+{deleteOne:{"filter":{yazar:"Suat Ok"}}}]);
